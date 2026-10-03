@@ -76,6 +76,19 @@ void Game::Render() const
 	for (const Box& brick : bricks)
 		brick.Draw();
 
+	if (bricks.empty())
+	{
+		Console::ForegroundColor(White);
+		Console::SetCursorPosition(23, 20);
+		std::cout << "You win! Press 'R' to play again.";
+	}
+	else if (ball.y_position >= WINDOW_HEIGHT - 1)
+	{
+		Console::ForegroundColor(White);
+		Console::SetCursorPosition(23, 20);
+		std::cout << "You lose. Press 'R' to play again.";
+	}
+
 	Console::Lock(false);
 }
 
@@ -95,13 +108,14 @@ void Game::CheckCollision()
 		}
 	}
 
-	// TODO #6 - If no bricks remain, pause ball and display (render) victory text with R to reset
-
+	if (bricks.empty())
+		ball.moving = false;
 
 	if (paddle.Contains(ball.x_position + ball.x_velocity, ball.y_velocity + ball.y_position))
 	{
 		ball.y_velocity *= -1;
 	}
 
-	// TODO #7 - If ball touches bottom of window, pause ball and display (render) defeat text with R to reset
+	if (ball.y_position >= WINDOW_HEIGHT - 1)
+		ball.moving = false;
 }
